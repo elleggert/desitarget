@@ -1162,8 +1162,6 @@ def process_overrides(ledgerfn):
       TARGET_STATE updated to OVERRIDE, the git VERSION updated, and the
       ZTILEID updated to -1.
     """
-    log.info("Processing override ledgers")
-
     # ADM read in the relevant entries in the override ledger.
     mtl = Table(io.read_mtl_ledger(ledgerfn))
 
@@ -1346,7 +1344,6 @@ def force_overrides(hpdirname, pixlist):
     fileform = io.find_mtl_file_format_from_header(hpdirname)
     # ADM this is the format for any associated override ledgers.
     overrideff = io.find_mtl_file_format_from_header(hpdirname, override=True)
-
     # ADM before making updates, check all suggested ledgers exist.
     for pix in pixlist:
         overfn = overrideff.format(pix)
@@ -1361,7 +1358,6 @@ def force_overrides(hpdirname, pixlist):
         # ADM the correct filenames for this pixel number.
         fn = fileform.format(pix)
         overfn = overrideff.format(pix)
-
         # ADM update override ledger and recover relevant MTL entries.
         overmtl = process_overrides(overfn)
 
@@ -1411,7 +1407,7 @@ def update_ledger(hpdirname, zcat, targets=None, obscon="DARK",
     fileform, oc = io.find_mtl_file_format_from_header(hpdirname, returnoc=True)
     # ADM this is the format for any associated override ledgers.
     overrideff = io.find_mtl_file_format_from_header(hpdirname, override=True)
-
+    isoverride = 'override' in overrideff.lower().split('/')[-1]
     # ADM check the obscondition is as expected.
     if obscon != oc:
         msg = "File is type {} but requested behavior is {}".format(oc, obscon)
@@ -1464,7 +1460,7 @@ def update_ledger(hpdirname, zcat, targets=None, obscon="DARK",
 
         # ADM if an override ledger exists, update it and recover its
         # ADM relevant MTL entries.
-        if os.path.exists(overfn):
+        if isoverride & os.path.exists(overfn):
             overmtl = process_overrides(overfn)
             # ADM add any override entries TO THE END OF THE LEDGER.
             mtlpix = vstack([mtlpix, overmtl])
