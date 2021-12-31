@@ -4,7 +4,7 @@ import pandas as pd
 
 filenames = []
 
-path = '../../../bricks_data/tractor/'
+path = 'bricks_data/tractor'
 
 for filename in os.listdir(path):
     if '.fits' not in filename:
@@ -17,5 +17,3 @@ res = select_targets(
     tcnames=['LRG', 'ELG', 'QSO'], backup=False)
 
 
-
-df = pd.DataFrame(data=res)
