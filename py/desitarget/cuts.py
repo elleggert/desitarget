@@ -36,7 +36,7 @@ from desitarget.internal import sharedmem
 from desitarget.gaiamatch import match_gaia_to_primary, find_gaia_files_hp
 from desitarget.gaiamatch import pop_gaia_coords, pop_gaia_columns, unextinct_gaia_mags
 from desitarget.gaiamatch import gaia_dr_from_ref_cat, is_in_Galaxy, gaia_psflike
-from desitarget.targets import finalize, resolve
+from targets import finalize, resolve
 from desitarget.geomask import bundle_bricks, pixarea2nside, sweep_files_touch_hp
 from desitarget.geomask import box_area, hp_in_box, is_in_box, is_in_hp
 from desitarget.geomask import cap_area, hp_in_cap, is_in_cap, imaging_mask
@@ -2630,6 +2630,8 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
 rdropout: gsnr < 3, rsnr < 3, zsnr > 4, w1snr > 4, w2snr > 2 or 3
 in addition to the notinELG_mask. Q: does this mean that the notinELG_mask should be called again?
 """
+
+    # Also add notinELG_mask filter
 
     gdropout = (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
 
