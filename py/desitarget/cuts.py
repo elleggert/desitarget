@@ -2406,7 +2406,7 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     -----
     - Gaia quantities have units as for `the Gaia data model`_.
     """
-
+    print("Entering set target_bits")
     from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
 
     # ADM if resolvetargs is set, limit to only sending north/south
@@ -2433,7 +2433,9 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
                 gaiagmag=gaiagmag, zfibertotflux=zfibertotflux,
                 maskbits=maskbits, south=south
             )
+
     lrg_north, lrg_south = lrg_classes
+    print(type(lrg_north))
 
     # ADM combine LRG target bits for an LRG target based on any imaging.
     lrg = (lrg_north & photsys_north) | (lrg_south & photsys_south)
@@ -2620,6 +2622,21 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     mws_faint_blue = (mws_faint_blue_n & photsys_north) | (mws_faint_blue_s & photsys_south)
 
     # Construct the targetflag bits for DECaLS (i.e. South).
+
+    print("DesiMask", desi_mask.LRG_SOUTH)
+    print("Tester:", np.array([True, False]) * desi_mask.LRG_SOUTH)
+
+    """gdropout: gsnr < 3, rsnr > 4, zsnr > 4, w1snr > 4, w2snr > 2 or 3
+rdropout: gsnr < 3, rsnr < 3, zsnr > 4, w1snr > 4, w2snr > 2 or 3
+in addition to the notinELG_mask. Q: does this mean that the notinELG_mask should be called again?
+"""
+
+    gdropout = (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+
+    rdropout = (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+
+    print(len(lrg_south), len(gdropout))
+
     desi_target = lrg_south * desi_mask.LRG_SOUTH
     desi_target |= elg_south * desi_mask.ELG_SOUTH
     desi_target |= elg_vlo_south * desi_mask.ELG_VLO_SOUTH
@@ -2873,6 +2890,8 @@ def apply_cuts(objects, qso_selection='randomforest',
       input table. To avoid this, pass in ``objects.copy()`` instead.
     - See :mod:`desitarget.targetmask` for the definition of each bit.
     """
+
+    print("Entering Apply_Cuts")
     # - Check if objects is a filename instead of the actual data.
     if isinstance(objects, str):
         objects = io.read_tractor(objects)
@@ -2913,7 +2932,7 @@ def apply_cuts(objects, qso_selection='randomforest',
     # ADM set different bits based on whether we're using the main survey
     # code or an iteration of SV.
     if survey == 'main':
-        import desitarget.cuts as targcuts
+        import cuts as targcuts
     elif survey[:2] == 'sv':
         targcuts = import_module("desitarget.{}.{}_cuts".format(survey, survey))
     else:

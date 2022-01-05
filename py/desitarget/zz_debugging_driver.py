@@ -5,12 +5,13 @@ import pandas as pd
 filenames = []
 
 path = 'bricks_data/tractor'
+#path = '/Volumes/Astrostick/bricks_data/south/'
+
 
 for filename in os.listdir(path):
     if '.fits' not in filename:
         continue
     filenames.append(f'{path}/{filename}')
-
 
 res = select_targets(
     infiles=filenames, numproc=1, qso_selection='colorcuts', nside=None, gaiasub=False,
