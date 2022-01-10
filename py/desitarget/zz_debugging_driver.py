@@ -61,3 +61,4 @@ def desitarget_bitcode_2_str(bitcode):
 for obj in targets:
     print(desitarget_bitcode_2_str(obj))
 
+print(df.DESI_TARGET.value_counts())
