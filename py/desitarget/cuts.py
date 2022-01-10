@@ -2435,7 +2435,6 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
             )
 
     lrg_north, lrg_south = lrg_classes
-    print(type(lrg_north))
 
     # ADM combine LRG target bits for an LRG target based on any imaging.
     lrg = (lrg_north & photsys_north) | (lrg_south & photsys_south)
@@ -2631,13 +2630,26 @@ rdropout: gsnr < 3, rsnr < 3, zsnr > 4, w1snr > 4, w2snr > 2 or 3
 in addition to the notinELG_mask. Q: does this mean that the notinELG_mask should be called again?
 """
 
-    # Also add notinELG_mask filter
 
-    gdropout = (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+    if primary is None:
+        primary = np.ones_like(rflux, dtype='?')
 
-    rdropout = (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+    if "LBG" in tcnames:
+        nomask = notinELG_mask(
+            maskbits=maskbits, gsnr=gsnr, rsnr=rsnr, zsnr=zsnr,
+            gnobs=gnobs, rnobs=rnobs, znobs=znobs, primary=primary)
 
-    print(len(lrg_south), len(gdropout))
+        gdropout_north = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+        gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
+        rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+        rdropout_south = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
+
+
+    # ADM combine LRG target bits for an LRG target based on any imaging.
+        glbg = (gdropout_north & photsys_north) | (gdropout_south & photsys_south)
+        rlbg = (rdropout_north & photsys_north) | (rdropout_south & photsys_south)
+
+
 
     desi_target = lrg_south * desi_mask.LRG_SOUTH
     desi_target |= elg_south * desi_mask.ELG_SOUTH
@@ -2666,6 +2678,11 @@ in addition to the notinELG_mask. Q: does this mean that the notinELG_mask shoul
     desi_target |= std_faint * desi_mask.STD_FAINT
     desi_target |= std_bright * desi_mask.STD_BRIGHT
     desi_target |= std_wd * desi_mask.STD_WD
+
+    # Add target bits for Lyman Beak Galaxies / Dropouts
+    desi_target |= glbg * desi_mask.G_LBG
+    desi_target |= rlbg * desi_mask.R_LBG
+
 
     # BGS targets, south.
     bgs_target = bgs_bright_south * bgs_mask.BGS_BRIGHT_SOUTH
