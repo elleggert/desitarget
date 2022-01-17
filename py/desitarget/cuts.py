@@ -2373,7 +2373,7 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     tcnames : :class:`list`, defaults to running all target classes
         A list of strings, e.g. ['QSO','LRG']. If passed, process only
         only those specific target classes. A useful speed-up for tests.
-        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD"].
+        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD", "LBG"].
     qso_optical_cuts : :class:`boolean` defaults to ``False``
         Apply just optical color-cuts when selecting QSOs with
         ``qso_selection="colorcuts"``.
@@ -2866,7 +2866,7 @@ def apply_cuts_gaia(numproc=4, survey='main', nside=None, pixlist=None,
 
 
 def apply_cuts(objects, qso_selection='randomforest',
-               tcnames=["ELG", "QSO", "LRG", "MWS", "BGS", "STD"],
+               tcnames=["ELG", "QSO", "LRG", "MWS", "BGS", "STD", "LBG"],
                qso_optical_cuts=False, survey='main', resolvetargs=True,
                mask=True):
     """Perform target selection on objects, returning target mask arrays.
@@ -2882,7 +2882,7 @@ def apply_cuts(objects, qso_selection='randomforest',
     tcnames : :class:`list`, defaults to running all target classes
         A list of strings, e.g. ['QSO','LRG']. If passed, process targets
         only for those specific classes. A useful speed-up when testing.
-        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD"].
+        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD", "LBG"].
     qso_optical_cuts : :class:`boolean` defaults to ``False``
         Apply just optical color-cuts when selecting QSOs with
         ``qso_selection="colorcuts"``.
@@ -2985,7 +2985,7 @@ qso_selection_options = ['colorcuts', 'randomforest']
 def select_targets(infiles, numproc=4, qso_selection='randomforest',
                    gaiasub=False, nside=None, pixlist=None, bundlefiles=None,
                    extra=None, radecbox=None, radecrad=None, mask=True,
-                   tcnames=["ELG", "QSO", "LRG", "MWS", "BGS", "STD"],
+                   tcnames=["ELG", "QSO", "LRG", "MWS", "BGS", "STD", "LBG"],
                    survey='main', resolvetargs=True, backup=True,
                    return_infiles=False, test=False):
     """Process input files in parallel to select targets.
@@ -3030,7 +3030,7 @@ def select_targets(infiles, numproc=4, qso_selection='randomforest',
     tcnames : :class:`list`, defaults to running all target classes
         List of strings, e.g. ['QSO','LRG']. If passed, process targets
         only for those specific classes. A useful speed-up when testing.
-        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD"].
+        Options include ["ELG", "QSO", "LRG", "MWS", "BGS", "STD", "LBG"].
     survey : :class:`str`, defaults to ``'main'``
         Which target masks yaml file and target selection cuts to use.
         Options are ``'main'`` and ``'svX``' (where X is 1, 2, 3 etc.)
