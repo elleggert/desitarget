@@ -2635,21 +2635,8 @@ in addition to the notinELG_mask. Q: does this mean that the notinELG_mask shoul
         primary = np.ones_like(rflux, dtype='?')
 
     if "LBG" in tcnames:
-        nomask = notinELG_mask(
-            maskbits=maskbits, gsnr=gsnr, rsnr=rsnr, zsnr=zsnr,
-            gnobs=gnobs, rnobs=rnobs, znobs=znobs, primary=primary)
-
-        gdropout_north = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
-        gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
-        rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
-        rdropout_south = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
-
-
-    # ADM combine LRG target bits for an LRG target based on any imaging.
-        glbg = (gdropout_north & photsys_north) | (gdropout_south & photsys_south)
-        rlbg = (rdropout_north & photsys_north) | (rdropout_south & photsys_south)
-
-
+        glbg, rlbg = is_LymanBreak(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr,
+                                   w2snr, znobs, zsnr)
 
     desi_target = lrg_south * desi_mask.LRG_SOUTH
     desi_target |= elg_south * desi_mask.ELG_SOUTH
@@ -2733,6 +2720,20 @@ in addition to the notinELG_mask. Q: does this mean that the notinELG_mask shoul
     desi_target |= (mws_target != 0) * desi_mask.MWS_ANY
 
     return desi_target, bgs_target, mws_target
+
+
+def is_LymanBreak(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr, w2snr, znobs, zsnr):
+    nomask = notinELG_mask(
+        maskbits=maskbits, gsnr=gsnr, rsnr=rsnr, zsnr=zsnr,
+        gnobs=gnobs, rnobs=rnobs, znobs=znobs, primary=primary)
+    gdropout_north = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+    gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
+    rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
+    rdropout_south = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
+    # ADM combine LRG target bits for an LRG target based on any imaging.
+    glbg = (gdropout_north & photsys_north) | (gdropout_south & photsys_south)
+    rlbg = (rdropout_north & photsys_north) | (rdropout_south & photsys_south)
+    return glbg, rlbg
 
 
 def apply_cuts_gaia(numproc=4, survey='main', nside=None, pixlist=None,
