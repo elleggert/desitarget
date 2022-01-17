@@ -2622,21 +2622,12 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
 
     # Construct the targetflag bits for DECaLS (i.e. South).
 
-    print("DesiMask", desi_mask.LRG_SOUTH)
-    print("Tester:", np.array([True, False]) * desi_mask.LRG_SOUTH)
-
-    """gdropout: gsnr < 3, rsnr > 4, zsnr > 4, w1snr > 4, w2snr > 2 or 3
-rdropout: gsnr < 3, rsnr < 3, zsnr > 4, w1snr > 4, w2snr > 2 or 3
-in addition to the notinELG_mask. Q: does this mean that the notinELG_mask should be called again?
-"""
-
-
     if primary is None:
         primary = np.ones_like(rflux, dtype='?')
 
     if "LBG" in tcnames:
-        glbg, rlbg = is_LymanBreak(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr,
-                                   w2snr, znobs, zsnr)
+        glbg, rlbg = isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr,
+                           w2snr, znobs, zsnr)
 
     desi_target = lrg_south * desi_mask.LRG_SOUTH
     desi_target |= elg_south * desi_mask.ELG_SOUTH
@@ -2722,10 +2713,27 @@ in addition to the notinELG_mask. Q: does this mean that the notinELG_mask shoul
     return desi_target, bgs_target, mws_target
 
 
-def is_LymanBreak(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr, w2snr, znobs, zsnr):
+def isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr, w2snr, znobs, zsnr):
     nomask = notinELG_mask(
         maskbits=maskbits, gsnr=gsnr, rsnr=rsnr, zsnr=zsnr,
         gnobs=gnobs, rnobs=rnobs, znobs=znobs, primary=primary)
+
+    """
+        Parameters
+        ----------
+        - See :func:`~desitarget.cuts.set_target_bits` for other parameters.
+
+
+        Returns
+        -------
+        :tuple of class:`array_like`
+            ``True`` if and only if the object is an LBG (Lyman Break / Dropout Galaxy) target.
+            First Array returned concerns Dropouts in the G-band. Second Array Dropouts in the R-Band.
+
+        Notes
+        -----
+        - Current version (17/01/22) is version 260 on `the wiki`_.
+        """
     gdropout_north = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
     gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
     rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
@@ -2733,6 +2741,7 @@ def is_LymanBreak(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, 
     # ADM combine LRG target bits for an LRG target based on any imaging.
     glbg = (gdropout_north & photsys_north) | (gdropout_south & photsys_south)
     rlbg = (rdropout_north & photsys_north) | (rdropout_south & photsys_south)
+
     return glbg, rlbg
 
 
