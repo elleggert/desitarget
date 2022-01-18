@@ -81,15 +81,15 @@ def desitarget_bitcode_2_str(bitcode):
             categories.append(desi_mask.bitname(i))
         i -= 1
 
-    return desi_codes # , categories, comments
+    return desi_codes  # , categories, comments
+
 
 def desi_code_2_label(code):
-
     lrg = elg = qso = glbg = rlbg = False
 
-    LRG_CODES = {0,8,16}
-    ELG_CODES = {1,5,6,7,9,11,12,17,19,20}
-    QSO_CODES = {2,4,10,18}
+    LRG_CODES = {0, 8, 16}
+    ELG_CODES = {1, 5, 6, 7, 9, 11, 12, 17, 19, 20}
+    QSO_CODES = {2, 4, 10, 18}
     GLBG_CODE = {38}
     RLBG_CODE = {39}
 
@@ -111,27 +111,22 @@ def desi_code_2_label(code):
     return lrg, elg, qso, glbg, rlbg
 
 
-
-
 def desi_code_2_cat(bitcode):
-
     return desi_code_2_label(desitarget_bitcode_2_str(bitcode))
-
 
 
 for obj in targets:
     print(desitarget_bitcode_2_str(obj))
 
-
-cats  = df.DESI_TARGET.apply(desi_code_2_cat)
+cats = df.DESI_TARGET.apply(desi_code_2_cat)
 
 print(type(cats[0]))
-df['LRG'], df['ELG'], df['QSO'], df['GLBG'],df['RLBG'] = zip(*cats)
+df['LRG'], df['ELG'], df['QSO'], df['GLBG'], df['RLBG'] = zip(*cats)
 
 print((df.head()))
 
-#df['ELG'] = np.zeros(len(df))
-#df['QSO'] = np.zeros(len(df))
-#df['LRG'] = np.zeros(len(df))
-#df['LRG'] = np.zeros(len(df))
-#df['LRG'] = np.zeros(len(df))
+# df['ELG'] = np.zeros(len(df))
+# df['QSO'] = np.zeros(len(df))
+# df['LRG'] = np.zeros(len(df))
+# df['LRG'] = np.zeros(len(df))
+# df['LRG'] = np.zeros(len(df))
