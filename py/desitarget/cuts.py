@@ -2657,7 +2657,7 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     desi_target |= std_bright * desi_mask.STD_BRIGHT
     desi_target |= std_wd * desi_mask.STD_WD
 
-    # Add target bits for Lyman Beak Galaxies / Dropouts
+    # Add target bits for Lyman Break Galaxies / Dropouts in G- and R- bands
     desi_target |= glbg * desi_mask.G_LBG
     desi_target |= rlbg * desi_mask.R_LBG
 
@@ -2738,6 +2738,7 @@ def isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, r
     gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
     rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
     rdropout_south = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
+
     # ADM combine LRG target bits for an LRG target based on any imaging.
     glbg = (gdropout_north & photsys_north) | (gdropout_south & photsys_south)
     rlbg = (rdropout_north & photsys_north) | (rdropout_south & photsys_south)
