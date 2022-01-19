@@ -17,6 +17,11 @@ res = select_targets(
     tcnames=["LRG","ELG","QSO", 'LBG'], backup=False)
 
 
+# TODO:
+#  1. DROP UNNECESSARY ITEMS
+#  2. COMPUTE SNRS
+#  3. FIX TARGETMASK --> EITHER FORK DESIUTIL OR SIMPLY ALTER TARGETMASK.YAML
+
 df = format_output(result=res)
 
 print((df.head()))
