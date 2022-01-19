@@ -2624,6 +2624,8 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     if primary is None:
         primary = np.ones_like(rflux, dtype='?')
 
+    glbg, rlbg = [tcfalse, tcfalse]
+
     if "LBG" in tcnames:
         glbg, rlbg = isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, rsnr, w1snr,
                            w2snr, znobs, zsnr)
