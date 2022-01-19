@@ -60,8 +60,6 @@ df = pd.DataFrame.from_records(data=list(res), columns=columns)
 
 targets = df.DESI_TARGET.unique()
 
-print(targets)
-
 from targetmask import desi_mask
 
 
@@ -125,8 +123,4 @@ df['LRG'], df['ELG'], df['QSO'], df['GLBG'], df['RLBG'] = zip(*cats)
 
 print((df.head()))
 
-# df['ELG'] = np.zeros(len(df))
-# df['QSO'] = np.zeros(len(df))
-# df['LRG'] = np.zeros(len(df))
-# df['LRG'] = np.zeros(len(df))
-# df['LRG'] = np.zeros(len(df))
+print

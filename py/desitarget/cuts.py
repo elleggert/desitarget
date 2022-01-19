@@ -2406,7 +2406,6 @@ def set_target_bits(photsys_north, photsys_south, obs_rflux,
     -----
     - Gaia quantities have units as for `the Gaia data model`_.
     """
-    print("Entering set target_bits")
     from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
 
     # ADM if resolvetargs is set, limit to only sending north/south
@@ -2921,7 +2920,6 @@ def apply_cuts(objects, qso_selection='randomforest',
     - See :mod:`desitarget.targetmask` for the definition of each bit.
     """
 
-    print("Entering Apply_Cuts")
     # - Check if objects is a filename instead of the actual data.
     if isinstance(objects, str):
         objects = io.read_tractor(objects)
