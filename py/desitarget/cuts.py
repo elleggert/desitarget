@@ -2788,7 +2788,7 @@ def desi_code_2_label(code):
     return lrg, elg, qso, glbg, rlbg
 
 
-def desi_code_2_cat(bitcode):
+def desi_code_2_category(bitcode):
     return desi_code_2_label(desitarget_bitcode_2_str(bitcode))
 
 
@@ -2826,10 +2826,22 @@ def format_output(result):
             ('NUMOBS_INIT_DARK', '>i8'),
             ('PRIORITY_INIT_BRIGHT', '>i8'), ('NUMOBS_INIT_BRIGHT', '>i8'), ('PRIORITY_INIT_BACKUP', '>i8'),
             ('NUMOBS_INIT_BACKUP', '>i8')]
+
     columns = [c[0] for c in cols]
+
     df = pd.DataFrame.from_records(data=list(result), columns=columns)
-    cats = df.DESI_TARGET.apply(desi_code_2_cat)
-    df['LRG'], df['ELG'], df['QSO'], df['GLBG'], df['RLBG'] = zip(*cats)
+
+    # df.apply() is not a vectorised function, potential performance bottleneck
+    galaxy_booleans = df.DESI_TARGET.apply(desi_code_2_category)
+
+    df['LRG'], df['ELG'], df['QSO'], df['GLBG'], df['RLBG'] = zip(*galaxy_booleans)
+
+    df['GSNR'] = df['FLUX_G'] * np.sqrt(df['FLUX_IVAR_G'])
+    df['RSNR'] = df['FLUX_R'] * np.sqrt(df['FLUX_IVAR_R'])
+    df['ZSNR'] = df['FLUX_Z'] * np.sqrt(df['FLUX_IVAR_Z'])
+    df['W1SNR'] = df['FLUX_W1'] * np.sqrt(df['FLUX_IVAR_W1'])
+    df['W2SNR'] = df['FLUX_W2'] * np.sqrt(df['FLUX_IVAR_W2'])
+
     return df
 
 

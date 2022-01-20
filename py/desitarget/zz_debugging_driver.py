@@ -4,7 +4,7 @@ from cuts import select_targets, format_output
 filenames = []
 
 path = 'bricks_data/tractor'
-path = '/Volumes/Astrostick/bricks_data/south/'
+#path = '/Volumes/Astrostick/bricks_data/south/'
 
 
 for filename in os.listdir(path):
@@ -19,7 +19,6 @@ res = select_targets(
 
 # TODO:
 #  1. DROP UNNECESSARY ITEMS
-#  2. COMPUTE SNRS
 #  3. FIX TARGETMASK --> EITHER FORK DESIUTIL OR SIMPLY ALTER TARGETMASK.YAML
 
 df = format_output(result=res)
