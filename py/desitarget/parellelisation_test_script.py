@@ -13,7 +13,7 @@ filenames = [f'{path}/{filename}' for filename in fn]
 
 # Alter numproc parameter here
 res = select_targets(
-    infiles=filenames, numproc=1, qso_selection='colorcuts', nside=None, gaiasub=False,
+    infiles=filenames, numproc=1, qso_selection='randomforest', nside=None, gaiasub=False,
     tcnames=["LRG", "ELG", "QSO", 'LBG'], backup=False)
 
 df = format_output(result=res)
