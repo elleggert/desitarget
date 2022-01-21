@@ -2723,22 +2723,22 @@ def isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, r
         gnobs=gnobs, rnobs=rnobs, znobs=znobs, primary=primary)
 
     """
-        Parameters
-        ----------
-        - See :func:`~desitarget.cuts.set_target_bits` for other parameters.
+    Parameters
+    ----------
+    - See :func:`~desitarget.cuts.set_target_bits` for other parameters.
 
-        NOTE: FUNCTION ADDED BY EE
+    NOTE: FUNCTION ADDED BY EE
     
-        Returns
-        -------
-        :tuple of class:`array_like`
-            ``True`` if and only if the object is an LBG (Lyman Break / Dropout Galaxy) target.
-            First Array returned concerns Dropouts in the G-band. Second Array Dropouts in the R-Band.
+    Returns
+    -------
+    :tuple of class:`array_like`
+        ``True`` if and only if the object is an LBG (Lyman Break / Dropout Galaxy) target.
+        First Array returned concerns Dropouts in the G-band. Second Array Dropouts in the R-Band.
 
-        Notes
-        -----
-        - Current version (17/01/22) is version 260 on `the wiki`_.
-        """
+    Notes
+    -----
+    - Current version (17/01/22) is version 260 on `the wiki`_.
+    """
     gdropout_north = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
     gdropout_south = nomask & (gsnr < 3) & (rsnr > 4) & (zsnr > 4) & (w1snr > 4) & (w2snr > 3)
     rdropout_north = nomask & (gsnr < 3) & (rsnr < 3) & (zsnr > 4) & (w1snr > 4) & (w2snr > 2)
@@ -2752,6 +2752,20 @@ def isLBG(gnobs, gsnr, maskbits, photsys_north, photsys_south, primary, rnobs, r
 
 
 def desitarget_bitcode_2_str(bitcode):
+    """
+    Parameters
+    ----------
+    - bitcode: the desitarget bitcode that is returned by the set_target_bits function
+
+    NOTE: FUNCTION ADDED BY EE
+
+    Returns
+    -------
+    :set of int
+    - the bitcode converted to a set of all galaxy category labels that were identified by the pipeline
+
+    """
+
     binary_representation = (bin(bitcode))
     binary_representation = binary_representation[2:]
 
@@ -2768,6 +2782,20 @@ def desitarget_bitcode_2_str(bitcode):
 
 
 def desi_code_2_label(code):
+    """
+    Parameters
+    ----------
+    - code: the desitarget bitcode set of ints that is returned by the desitarget_bitcode_2_str function
+
+    NOTE: FUNCTION ADDED BY EE
+
+    Returns
+    -------
+    :tuple of booleans
+    - the function checks whether the labels encoded in the desitarget pipeline matches the codes for certain galaxy tyes
+    - decreases granularity of classification for our purposes
+    """
+
     LRG_CODES = {0, 8, 16}
     ELG_CODES = {1, 5, 6, 7, 9, 11, 12, 17, 19, 20}
     QSO_CODES = {2, 4, 10, 18}
@@ -2790,10 +2818,42 @@ def desi_code_2_label(code):
 
 
 def desi_code_2_category(bitcode):
+    """
+    Parameters
+    ----------
+    - bitcode: the desitarget bitcode set of ints that is returned by the desitarget_bitcode_2_str function
+
+    NOTE: FUNCTION ADDED BY EE
+
+    Returns
+    -------
+    :tuple of booleans
+    - the function checks whether the labels encoded in the desitarget pipeline matches the codes for certain galaxy tyes
+    - decreases granularity of classification for our purposes
+    - driver function converting desitarget bitcode to boolean flags for galaxy types
+    """
+
     return desi_code_2_label(desitarget_bitcode_2_str(bitcode))
 
 
 def format_output(result):
+    """
+    Parameters
+    ----------
+    - result: The result (vec array) returned by the modified select_targets function
+
+    NOTE: FUNCTION ADDED BY EE
+
+    Returns
+    -------
+    :a Pandas Dataframe
+    - the function formats the results in a pandas dataframe
+    - adds relevant columns for SNR
+    - classifies the desitarget bitcodes into boolean flags for categories
+    - drops excess information
+    """
+
+
     cols = [('RELEASE', '>i2'), ('BRICKID', '>i4'), ('BRICKNAME', 'S8'), ('BRICK_OBJID', '>i4'), ('MORPHTYPE', 'S4'),
             ('RA', '>f8'), ('RA_IVAR', '>f4'), ('DEC', '>f8'), ('DEC_IVAR', '>f4'), ('DCHISQ', '>f4', (5,)),
             ('EBV', '>f4'),
