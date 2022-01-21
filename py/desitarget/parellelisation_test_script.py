@@ -15,8 +15,6 @@ area = 'north'
 # If working from file directory
 filenames = [f'{path}/{filename}' for filename in os.listdir(path) if '.fits' in filename]
 
-filenames = filenames[0:50]
-
 # Alter numproc parameter here
 res = select_targets(
     infiles=filenames, numproc=1, qso_selection='colorcuts', nside=None, gaiasub=False,
