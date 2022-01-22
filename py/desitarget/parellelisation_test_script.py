@@ -6,6 +6,7 @@ import healpy as hp
 import numpy as np
 
 # ToDo:
+#1. Also store redshift catalogue booleans as int8 --> somehow booleans need more storage --> gains
 # 3. Adapt script to accept CLArgs
 
 
