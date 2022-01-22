@@ -34,9 +34,12 @@ bricks_block_size = 100
 # If working from file directory
 filenames = [f'{path}/{filename}' for filename in os.listdir(path) if '.fits' in filename]
 
+filenames = filenames[:54]
 # Generate Empty DF to append to on disk
 df = pd.DataFrame(columns=['RA', 'DEC', 'DCHISQ', 'FLUX_G', 'FLUX_R', 'FLUX_Z', 'FLUX_W1',
                            'FLUX_W2', 'LRG', 'ELG', 'QSO', 'GLBG', 'RLBG', 'GSNR', 'RSNR', 'ZSNR', 'W1SNR', 'W2SNR'])
+
+path = '/Users/edgareggert/astrostatistics/bricks_data/tractor'
 
 df.to_csv(f'{path}/redshift_catalogue_{area}.csv', mode='w', index=False, header=True)
 
@@ -58,7 +61,7 @@ for i in range(0, len(filenames), bricks_block_size):
 # Computing some summary statistics
 
 
-df = pd.read_csv(f'{path}/galaxy_catalogue_{area}.csv', dtype={'RA': 'float64',
+df = pd.read_csv(f'{path}/redshift_catalogue_{area}.csv', dtype={'RA': 'float64',
                                                                  'DEC': 'float64',
                                                                  'DCHISQ': 'object',
                                                                  'FLUX_G': 'float64',
@@ -66,11 +69,11 @@ df = pd.read_csv(f'{path}/galaxy_catalogue_{area}.csv', dtype={'RA': 'float64',
                                                                  'FLUX_Z': 'float64',
                                                                  'FLUX_W1': 'float64',
                                                                  'FLUX_W2': 'float64',
-                                                                 'LRG': 'bool',
-                                                                 'ELG': 'bool',
-                                                                 'QSO': 'bool',
-                                                                 'GLBG': 'bool',
-                                                                 'RLBG': 'bool',
+                                                                 'LRG': 'int8',
+                                                                 'ELG': 'int8',
+                                                                 'QSO': 'int8',
+                                                                 'GLBG': 'int8',
+                                                                 'RLBG': 'int8',
                                                                  'GSNR': 'float64',
                                                                  'RSNR': 'float64',
                                                                  'ZSNR': 'float64',
