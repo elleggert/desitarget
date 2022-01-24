@@ -16,8 +16,8 @@ def raDec2thetaPhi(ra, dec):
     return (0.5 * np.pi - np.deg2rad(dec)), (np.deg2rad(ra))
 
 
-# Set path to where all northern bricks are
-path = '/Volumes/Astrostick/bricks_data/south/'
+# Set path to where all bricks are and area to extract
+path = '/Volumes/Astrostick/bricks_data/north/'
 area = 'north'
 bricks_block_size = 5000
 
@@ -67,8 +67,6 @@ df = pd.read_csv(f'{path}/redshift_catalogue_{area}.csv', dtype={'RA': 'float64'
                                                                  'ZSNR': 'float64',
                                                                  'W1SNR': 'float64',
                                                                  'W2SNR': 'float64'})
-
-print(NPIX)
 
 print(f"Total Objects   : {len(df)}")
 print(f"No of LRG       : {len(df[df['LRG'] == True])}")
